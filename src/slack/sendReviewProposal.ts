@@ -1,28 +1,20 @@
 import { App, MessageAttachment } from "@slack/bolt";
-import { AppFiguresReview, AppFiguresStars } from "../types";
 import { sendMessage } from ".";
-
-function formatStars(starsString: AppFiguresStars) {
-  const stars = Number(starsString.split(".")[0]);
-
-  return "⭐️".repeat(stars);
-}
+import { GlobalReview } from "../types";
 
 export async function sendReviewProposal(
   app: App,
   ts: string,
-  review: AppFiguresReview,
+  review: GlobalReview,
   response: string
 ) {
-  const formatReview = `${review.original_review}\n_Review: ${formatStars(
-    review.stars
-  )}_`;
+  const formatReview = `${review.description}\n_Review: ${"⭐️".repeat(review.rating)}_`;
 
   const reviewAttachement: MessageAttachment = {
     mrkdwn_in: ["text"],
     color: "#BCBCBC",
     author_name: review.author,
-    title: review.original_title,
+    title: review.title,
     text: formatReview,
   };
   const responseAttachement: MessageAttachment = {
@@ -50,7 +42,7 @@ export async function sendReviewProposal(
             },
             action_id: "send_review",
             style: "primary",
-            value: `${review.id}--${response}`,
+            value: `${review.id}--${review.type}--${review.author}--${response}`,
           },
         ],
       },
@@ -60,7 +52,7 @@ export async function sendReviewProposal(
   await sendMessage(
     app,
     [reviewAttachement, responseAttachement],
-    `📲 Review on ${review.store}`,
+    `📲 Review on ${review.type}`,
     ts
   );
 }

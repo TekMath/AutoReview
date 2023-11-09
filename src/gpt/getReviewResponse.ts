@@ -1,15 +1,15 @@
 import OpenAI from "openai";
-import { AppFiguresReview } from "../types";
+import { GlobalReview } from "../types";
 
-export async function getReviewResponse(review: AppFiguresReview, openai: OpenAI) {
-  if (review.has_response) {
+export async function getReviewResponse(review: GlobalReview, openai: OpenAI) {
+  if (review.description) {
     return null;
   }
 
   const prompt = process.env.OPENAI_PROMPT;
 
   const completion = await openai.chat.completions.create({
-    messages: [{ role: 'user', content: `${prompt}\n\n${review.original_review}` }],
+    messages: [{ role: 'user', content: `${prompt}\n\n${review.description}` }],
     model: 'gpt-3.5-turbo',
   }).catch((error) => console.log(error));
 
