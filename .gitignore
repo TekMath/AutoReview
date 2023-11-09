@@ -1,6 +1,7 @@
 # Based on https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore
 
 GOOGLE_CREDS.json
+APPLE_PRIVATE_KEY.p8
 
 # Logs
 
