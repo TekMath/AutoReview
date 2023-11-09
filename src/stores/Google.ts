@@ -69,7 +69,7 @@ export class Google {
 
       const date = new Date();
       const lastModifiedSeconds = Number(userComment.lastModified?.seconds);
-      date.setDate(date.getDate() - 4);
+      date.setDate(date.getDate() - 1);
 
       const yesterdaySeconds = Math.floor(date.getTime() / 1000);
       if (yesterdaySeconds > lastModifiedSeconds) {

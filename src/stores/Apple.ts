@@ -117,7 +117,7 @@ export class Apple {
     }
 
     const date = new Date();
-    date.setDate(date.getDate() - 10);
+    date.setDate(date.getDate() - 1);
 
     const reviews = [];
     const data = response.data as ASCReviews;

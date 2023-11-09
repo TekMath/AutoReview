@@ -66,7 +66,7 @@ export async function run(app: App, apple: Apple, google: Google) {
   reviews.map(async (review) => {
     const response = await getReviewResponse(review, openai);
     if (!response || response.length > 350) {
-      console.log(`Too big ${review.id}`)
+      console.log(`Too big ${review.id}`, response)
       return;
     }
 

@@ -57,7 +57,7 @@ app.action("send_review", async ({ ack, body, respond }) => {
 app.start();
 
 CronJob.from({
-  cronTime: "50 23 * * *",
+  cronTime: "58 23 * * *",
   onTick: () => run(app, apple, google),
   start: true,
   timeZone: "Europe/Paris",
