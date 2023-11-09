@@ -74,6 +74,32 @@ export class Apple {
     console.log(response.data.data);
   }
 
+  async sendReviewResponse(id: string, response: string) {
+    const res = await this.instance
+      .post(
+        `customerReviewResponses`,
+        {
+          data: {
+            attributes: {
+              responseBody: response,
+            },
+            relationships: {
+              review: { data: { id, type: "customerReviews" } },
+            },
+            type: "customerReviewResponses",
+          },
+        },
+        {
+          headers: {
+            Authorization: this.token,
+          },
+        }
+      )
+      .catch((error) => console.log(error));
+
+    return res;
+  }
+
   async getReviews() {
     const response = await this.instance
       .get(
@@ -85,13 +111,13 @@ export class Apple {
         }
       )
       .catch((error) => console.log(error));
-    
+
     if (!response) {
       return [];
     }
 
     const date = new Date();
-    date.setDate(date.getDate() - 4);
+    date.setDate(date.getDate() - 10);
 
     const reviews = [];
     const data = response.data as ASCReviews;

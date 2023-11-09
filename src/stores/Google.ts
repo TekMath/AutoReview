@@ -15,12 +15,23 @@ export class Google {
   }
 
   private async getWeeklyReviews(token?: string) {
-    const response = await this.androidPublisher.reviews.list({
-      auth: this.auth,
-      packageName: "com.revolt.metropolis_game",
-      token
-    }).catch((error) => console.log(error))
+    const response = await this.androidPublisher.reviews
+      .list({
+        packageName: process.env.GOOGLE_APP_PACKAGE,
+        token,
+      })
+      .catch((error) => console.log(error));
     return response?.data;
+  }
+
+  async sendReviewResponse(id: string, response: string) {
+    const res = await this.androidPublisher.reviews.reply({
+      packageName: process.env.GOOGLE_APP_PACKAGE,
+      reviewId: id,
+      requestBody: { replyText: response },
+    }).catch((error) => console.log(error));
+
+    return res;
   }
 
   async getReviews() {
@@ -46,17 +57,19 @@ export class Google {
 
     return reviews.filter((review) => {
       if (review.comments?.find((comment) => comment.developerComment)) {
-        return false
+        return false;
       }
 
-      const userComment = review.comments?.find((comment) => comment.userComment)?.userComment;
+      const userComment = review.comments?.find(
+        (comment) => comment.userComment
+      )?.userComment;
       if (!userComment || !userComment.lastModified) {
         return false;
       }
-      
+
       const date = new Date();
       const lastModifiedSeconds = Number(userComment.lastModified?.seconds);
-      date.setDate(date.getDate() - 1);
+      date.setDate(date.getDate() - 4);
 
       const yesterdaySeconds = Math.floor(date.getTime() / 1000);
       if (yesterdaySeconds > lastModifiedSeconds) {
@@ -64,6 +77,6 @@ export class Google {
       }
 
       return true;
-    })
+    });
   }
 }
