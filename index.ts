@@ -1,9 +1,10 @@
-import { App } from "@slack/bolt";
+import { App, MessageAttachment } from "@slack/bolt";
 import { CronJob } from "cron";
 import { run } from "./src/run";
 import { configDotenv } from "dotenv";
 import { Google } from "./src/stores/Google";
 import { Apple } from "./src/stores/Apple";
+import { editValidationMessage } from "./src/slack/editValidationMessage";
 
 configDotenv();
 
@@ -28,33 +29,23 @@ const google = new Google({
   scopes: ["https://www.googleapis.com/auth/androidpublisher"],
 });
 
-app.action("send_review", async ({ ack, body, respond }) => {
+app.action("send_review", async ({ ack, respond, action, body }) => {
   await ack();
-  if (body.type !== "block_actions" || body.actions[0].type != "button") {
+  if (action.type !== "button" || body.type !== "block_actions") {
     return;
   }
 
-  const value = body.actions[0].value;
+  const value = action.value;
   const [id, type, author, response] = value.split("--");
 
   if (type === "google") {
     const valid = await google.sendReviewResponse(id, response);
-    if (!valid) {
-      return await respond(`‼️ Error during the reply for ${author} review`);
-    }
-    return await respond(
-      `✅ We have successfully sent the reply for ${author} review`
-    );
+    return await editValidationMessage(respond, body, author, valid);
   }
 
   if (type === "apple") {
     const valid = await apple.sendReviewResponse(id, response);
-    if (!valid) {
-      return await respond(`‼️ Error during the reply for ${author} review`);
-    }
-    return await respond(
-      `✅ We have successfully sent the reply for ${author} review`
-    );
+    return await editValidationMessage(respond, body, author, valid);
   }
 });
 
