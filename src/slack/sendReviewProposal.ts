@@ -8,7 +8,9 @@ export async function sendReviewProposal(
   review: GlobalReview,
   response: string
 ) {
-  const formatReview = `${review.description}\n_Review: ${"⭐️".repeat(review.rating)}_`;
+  const formatReview = `${review.description}\n_Review: ${"⭐️".repeat(
+    review.rating
+  )}_`;
 
   const reviewAttachement: MessageAttachment = {
     mrkdwn_in: ["text"],
@@ -24,11 +26,6 @@ export async function sendReviewProposal(
         text: {
           type: "mrkdwn",
           text: response,
-        },
-        accessory: {
-          type: "image",
-          image_url: "https://i.postimg.cc/ZRjbG8zv/b4-F1e-Vp-J-400x400.jpg",
-          alt_text: "OpenAI logo",
         },
       },
       {

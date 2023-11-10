@@ -42,7 +42,9 @@ app.action("send_review", async ({ ack, body, respond }) => {
     if (!valid) {
       return await respond(`‼️ Error during the reply for ${author} review`);
     }
-    return await respond(`✅ We have successfully sent the reply for ${author} review`);
+    return await respond(
+      `✅ We have successfully sent the reply for ${author} review`
+    );
   }
 
   if (type === "apple") {
@@ -50,7 +52,9 @@ app.action("send_review", async ({ ack, body, respond }) => {
     if (!valid) {
       return await respond(`‼️ Error during the reply for ${author} review`);
     }
-    return await respond(`✅ We have successfully sent the reply for ${author} review`);
+    return await respond(
+      `✅ We have successfully sent the reply for ${author} review`
+    );
   }
 });
 
